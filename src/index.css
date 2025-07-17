@@ -12,67 +12,289 @@ code {
     monospace;
 }
 
-/* This is for image in Signup page ---------------------------------- */
+/* ----------------This is for image in Signup page ---------------------------------- */
 .logo-img {
-  position: absolute;
-  right: 0;
+  position: fixed;
   top: 0;
-  width: 45%;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -2;
+  opacity: 1;
+}
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
+  background: linear-gradient(
+    1deg,
+    rgba(26, 26, 46, 0.9) 50%,
+    rgba(54, 54, 154, 0.8) 90%,
+    rgba(108, 92, 231, 0.7) 100%
+  );
+  z-index: -1;
 }
-.corner-img {
-  position: absolute;
-  top: -1px;
-  left: -1px;
-  width: 7rem; /* Adjust this value to make it smaller/larger */
-  height: auto; /* Maintains aspect ratio */
-  z-index: 10; /* Ensures it stays on top of other elements */
-}
-
 /* This is for form page ------------------------------------------------*/
 .container {
   display: flex;
-  /* justify-content: center; */
   align-items: center;
   min-height: 100vh;
-  margin-left: 14rem;
+  /* margin-left: 8rem; */
+  padding-left: 25rem;
+  /* padding: 2rem; */
 }
 
+/* Form container with glassmorphism effect */
 .form-container {
- 
-  max-width: 400px;
-  width: 90%;
-  padding: 1rem;
-  padding-bottom: 1rem;
+  max-width: 500px;
+  width: 50%;
+  padding: 1rem 2rem;
   
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
- 
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  box-shadow: 
+    0 25px 45px rgba(168, 0, 0, 0.1),
+    0 8px 32px rgba(30, 0, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: slideInUp 0.8s ease-out;
 }
 
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Form title styling */
 .form-title {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .form-title h2 {
-  color: #6c5ce7;
+  font-size: 2.2rem;
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 0.5rem;
+  font-weight: 700;
 }
 
 .form-title h3 {
-  color: #36369a;
+  font-size: 1.8rem;
+  color: #2d3436;
   margin-bottom: 0.5rem;
-}
-.paragraph {
-  color: #36369a;
-  margin-bottom: 0.5rem;
+  font-weight: 600;
 }
 
-.form-title p {
-  color: #666;
+.paragraph {
+  color: #636e72;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
   margin: 0;
+}
+
+/* Sign In heading */
+.mb-4 {
+  font-size: 1.5rem;
+  color: #2d3436;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+/* Form group styling */
+.mb-3 {
+  margin-bottom: 1.5rem;
+}
+
+/* Form label styling */
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #2d3436;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+/* Form control styling */
+.form-control {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.9);
+  box-sizing: border-box;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #6c5ce7;
+  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+  transform: translateY(-1px);
+}
+
+.form-control::placeholder {
+  color: #a0a6b1;
+}
+
+/* Form text styling */
+.form-text {
+  font-size: 0.85rem;
+  color: #636e72;
+  margin-top: 0.25rem;
+}
+
+/* Checkbox styling */
+.form-check {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.form-check-input {
+  width: 18px;
+  height: 18px;
+  margin-right: 0.5rem;
+  accent-color: #6c5ce7;
+}
+
+.form-check-label {
+  color: #2d3436;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+/* Button styling */
+.btn {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  color: white;
+  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+/* Alert styling */
+.alert {
+  padding: 0.875rem 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.alert-danger {
+  background: rgba(255, 107, 107, 0.1);
+  color: #e74c3c;
+  border: 1px solid rgba(255, 107, 107, 0.3);
+}
+
+.alert-success {
+  background: rgba(0, 184, 148, 0.1);
+  color: #00b894;
+  border: 1px solid rgba(0, 184, 148, 0.3);
+}
+
+.mt-4 {
+  margin-top: 1.5rem;
+}
+
+.mt-3 {
+  margin-top: 1rem;
+}
+
+/* Sign up link styling */
+.text-center {
+  text-align: center;
+}
+
+.text-center span {
+  color: #636e72;
+  font-size: 0.95rem;
+}
+
+.text-primary {
+  color: #6c5ce7 !important;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.text-primary:hover {
+  color: #a29bfe !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    margin-left: 2rem;
+    padding: 1rem;
+  }
+
+  .form-container {
+    max-width: 100%;
+    padding: 2rem 1.5rem;
+  }
+
+  .logo-img {
+    opacity: 0.1;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    margin-left: 1rem;
+  }
+
+  .form-title h2 {
+    font-size: 1.8rem;
+  }
+
+  .form-title h3 {
+    font-size: 1.5rem;
+  }
 }
 
 /* --------------------------This is for my topNav in dashboard ------------------------ */
@@ -83,7 +305,7 @@ code {
   right: 0;
   width: 100%;
   height: 40px;
-  background-color: #f8f9fa; /* Light gray background */
+  background-color: #f8f9fa; 
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -109,18 +331,18 @@ code {
 .icon-list li i {
   font-size: 20px;
   color: #333;
-  transition: color 0.2s, transform 0.2s; /* add smooth animation */
+  transition: color 0.2s, transform 0.2s; 
 }
 
 .icon-list li i:hover {
-  color: #007bff; /* Bootstrap primary blue */
-  transform: scale(1.2); /* makes it grow a little */
+  color: #007bff; 
+  transform: scale(1.2);
   cursor: pointer;
 }
 
 /*--------------------- This code is for my side navbar in dashboard ---------------------*/
 
-/* Side Navigation Styles */
+
 .sidenav {
   width: 208px;
   height: 100vh;
@@ -134,15 +356,16 @@ code {
   z-index: 1000;
 }
 
-.sidenav-header {
-  padding: 16px 20px;
-  border-bottom: 1px solid #334155;
-}
 
 .logo {
+  width: 7rem;
   display: flex;
   align-items: center;
   gap: 8px;
+  padding-left: 4px;
+  padding-top: 10px;
+  margin-bottom: 1rem;
+  
 }
 
 .logo-icon {
@@ -237,7 +460,6 @@ code {
 
 /* -----------------------This code CSS is for Email-dashboard --------------------------------*/
 
-/* === Dashboard Container === */
 .dashboard-container {
   padding: 20px;
   background-color: #f8f9fa;
@@ -275,13 +497,13 @@ code {
 }
 
 .search-box {
-  flex: 1 1 300px; /* Give search box more space */
+  flex: 1 1 300px; 
   min-width: 300px;
 }
 
 .search-input-wrapper {
   position: relative;
-  margin-bottom: 0; /* Remove margin to align properly */
+  margin-bottom: 0; 
 }
 
 .search-input {
@@ -289,7 +511,7 @@ code {
   padding: 10px 32px 10px 12px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  height: 40px; /* Set consistent height */
+  height: 40px; 
   box-sizing: border-box;
   font-size: 14px;
 }
@@ -304,6 +526,7 @@ code {
 
 .filters {
   display: flex;
+  
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
@@ -316,9 +539,9 @@ code {
   border-radius: 4px;
   background-color: white;
   font-size: 14px;
-  height: 40px; /* Same height as search input */
+  height: 40px; 
   box-sizing: border-box;
-  min-width: 120px; /* Consistent minimum width */
+  min-width: 120px; 
 }
 
 .filter-input {
@@ -340,7 +563,7 @@ code {
   align-items: center;
   gap: 5px;
   cursor: pointer;
-  height: 40px; /* Same height as other elements */
+  height: 40px; 
   box-sizing: border-box;
   font-size: 14px;
 }
@@ -396,7 +619,7 @@ code {
 }
 
 .email-sender-unread {
-  color: #000000;
+  color: #964242;
 }
 
 .email-date {
@@ -465,8 +688,13 @@ code {
 
 /* === Loading and Error === */
 .loading-container {
-  text-align: center;
-  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20vh;
+  font: 1em sans-serif;
+  color: #6c3b3b;
 }
 
 .loading-text {
@@ -478,9 +706,10 @@ code {
   width: 30px;
   height: 30px;
   border: 4px solid rgba(0, 0, 0, 0.1);
-  border-left-color: #007bff;
+  border-left-color: #000000;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+ 
 }
 
 @keyframes spin {
@@ -539,4 +768,37 @@ code {
   .filter-select {
     min-width: 100px;
   }
+}
+
+
+/* This CSS code is for my DashboardComponent when they are Rendered to there respective pages. */
+
+.comp_dashboard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40vh;
+  font: 1em sans-serif;
+  color: #6c3b3b;
+} 
+.component3{
+  margin-top: 0.6rem;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+/* ----------------------this is for calendar title */
+.filter-input-group {
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px;
+}
+
+.filter-label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: -20px;
+  transform: translateY(-22px);
+  color: #333;
 }

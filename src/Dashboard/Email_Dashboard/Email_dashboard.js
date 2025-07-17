@@ -1,5 +1,3 @@
-import react from 'react';
-
 import React, { useState, useEffect } from 'react';
 
 function EmailDashboard() {
@@ -7,32 +5,38 @@ function EmailDashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [visibleBodyId, setVisibleBodyId] = useState(null);
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [UnreadOnly, setUnreadOnly] = useState(false);
+  const [labelFilter, setLabelFilter] = useState('all');
+  const [maxResults, setMaxResults] = useState(20);
+  const [dateAfter, setDateAfter] = useState('');
+  const [dateBefore, setDateBefore] = useState('');
+
   const toggleBody = (id) => {
     setVisibleBodyId(prevId => (prevId === id ? null : id));
   };
-
-  const [searchTerm, setSearchTerm] = useState('');
-  const [UnreadOnly, setUnreadOnly] = useState('false');
-  const [labelFilter, setLabelFilter] = useState('all');
-  const [maxResults, setMaxResults] = useState('');
-  const [dateAfter, setDateAfter] = useState('');
-  const [dateBefore, setDateBefore] = useState('');
 
   const fetchEmails = async () => {
     setError('');
     setLoading(true);
 
-    const queryParams = new URLSearchParams();
+    const queryParams = new URLSearchParams();// WILL DO MORE
 
     if (maxResults) queryParams.append('max_results', maxResults);
     if (dateAfter) queryParams.append('date_after', dateAfter);
     if (dateBefore) queryParams.append('date_before', dateBefore);
+    if (searchTerm) queryParams.append('sender', searchTerm);
+    if (UnreadOnly) queryParams.append('unread', true);
+    if (labelFilter !== 'all') queryParams.append('label', labelFilter);
+    const baseURL = process.env.REACT_APP_BASE_URL;
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/rag_doc/Automated_email_response/api/fetch-emails?${queryParams}`);
+      const response = await fetch(`${baseURL}/Automated_email_response/api/fetch-emails?${queryParams}`);
       if (!response.ok) throw new Error('Failed to fetch emails');
       const data = await response.json();
       setEmails(data.emails || []);
+      console.log('Emails fetched:', data.emails);
     } catch (err) {
       setError('Failed to load emails. Please try again later.');
     } finally {
@@ -43,24 +47,6 @@ function EmailDashboard() {
   useEffect(() => {
     fetchEmails();
   }, []);
-
-  const filteredEmails = emails.filter(email => {
-    const matchesSearch =
-      email.subject?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      email.sender?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      email.body?.toLowerCase().includes(searchTerm.toLowerCase());
-  
-    const matchesUnread =
-      UnreadOnly === 'false' ||
-      (UnreadOnly === 'true' && email.labels?.includes('UNREAD'));
-  
-    const matchesLabel =
-      labelFilter === 'all' ||
-      (email.labels && email.labels.includes(labelFilter.toUpperCase()));
-  
-    return matchesSearch && matchesUnread && matchesLabel;
-  });
-
   const formatDate = (dateString) => {
     const options = {
       year: 'numeric',
@@ -105,21 +91,57 @@ function EmailDashboard() {
             </div>
 
             <div className="filters">
-              <input type="number" placeholder="Max Results" value={maxResults} onChange={(e) => setMaxResults(e.target.value)} className="filter-input" />
-              <input type="date" value={dateAfter} onChange={(e) => setDateAfter(e.target.value)} className="filter-input" />
-              <input type="date" value={dateBefore} onChange={(e) => setDateBefore(e.target.value)} className="filter-input" />
+              <div className="filter-input-group">
+                <label htmlFor="maxResults" className="filter-label">Max Results</label>
+                <input
+                  type="number"
+                  placeholder="Max Results"
+                  value={maxResults}
+                  onChange={(e) => setMaxResults(e.target.value)}
+                  className="filter-input"
+                />
+              </div>
+              <div className="filter-input-group">
+                <label htmlFor="dateAfter" className="filter-label">Date After</label>
+                <input
+                  id="dateAfter"
+                  type="date"
+                  value={dateAfter}
+                  onChange={(e) => setDateAfter(e.target.value)}
+                  className="filter-input"
+                />
+              </div>
 
-              <select value={UnreadOnly} onChange={(e) => setUnreadOnly(e.target.value)} className="filter-select">
+              <div className="filter-input-group">
+                <label htmlFor="dateBefore" className="filter-label">Date Before</label>
+                <input
+                  id="dateBefore"
+                  type="date"
+                  value={dateBefore}
+                  onChange={(e) => setDateBefore(e.target.value)}
+                  className="filter-input"
+                />
+              </div>
+
+
+              <select
+                value={UnreadOnly}
+                onChange={(e) => setUnreadOnly(e.target.value === 'true')}
+                className="filter-select"
+              >
                 <option value="false">All Emails</option>
                 <option value="true">Unread Only</option>
               </select>
 
-              <select value={labelFilter} onChange={(e) => setLabelFilter(e.target.value)} className="filter-select">
+              <select
+                value={labelFilter}
+                onChange={(e) => setLabelFilter(e.target.value)}
+                className="filter-select"
+              >
                 <option value="all">All Labels</option>
                 <option value="inbox">Inbox</option>
                 <option value="spam">Spam</option>
                 <option value="important">Important</option>
-                <option value="starred">Starred</option>
               </select>
 
               <button onClick={fetchEmails} className="btn-refresh">Execute</button>
@@ -135,18 +157,26 @@ function EmailDashboard() {
             </div>
           ) : error ? (
             <div className="error-message">{error}</div>
-          ) : filteredEmails.length > 0 ? (
+          ) : emails.length > 0 ? (
             <div className="emails-wrapper">
-              {filteredEmails.map((email, index) => (
-                <div key={index} className={`email-item ${!email.read ? 'email-unread' : ''}`}>
+              {emails.map((email, index) => (
+                <div key={index} className={`email-item ${!email.unread ? 'email-unread' : ''}`}>
                   <div className="email-header">
-                    <div className="email-avatar">{email.sender?.charAt(0).toUpperCase() || '?'}</div>
+                    <div className="email-avatar">
+                      {email.sender?.charAt(0).toUpperCase() || '?'}
+                    </div>
                     <div className="email-details">
                       <div className="email-sender-date">
-                        <p className={`email-sender ${!email.read ? 'email-sender-unread' : ''}`}>{email.sender || 'Unknown Sender'}</p>
-                        <p className="email-date">{email.email_received_at ? formatDate(email.email_received_at) : 'No date'}</p>
+                        <p className={`email-sender ${!email.unread ? 'email-sender-unread' : ''}`}>
+                          {email.sender || 'Unknown Sender'}
+                        </p>
+                        <p className="email-date">
+                          {email.email_received_at ? formatDate(email.email_received_at) : 'No date'}
+                        </p>
                       </div>
-                      <h3 className={`email-subject ${!email.read ? 'email-subject-unread' : ''}`}>{email.subject || 'No Subject'}</h3>
+                      <h3 className={`email-subject ${!email.unread ? 'email-subject-unread' : ''}`}>
+                        {email.subject || 'No Subject'}
+                      </h3>
                       <p className="email-id">Email ID: {email.id}</p>
                       <p className="thread-id">Thread ID: {email.thread_id}</p>
                       <button className="btn-see-body" onClick={() => toggleBody(email.id)}>
@@ -158,7 +188,9 @@ function EmailDashboard() {
                       {email.labels && email.labels.length > 0 && (
                         <div className="email-labels">
                           {email.labels.map((label, idx) => (
-                            <span key={idx} className={`email-label ${getLabelColor(label)}`}>{label}</span>
+                            <span key={idx} className={`email-label ${getLabelColor(label)}`}>
+                              {label}
+                            </span>
                           ))}
                         </div>
                       )}
@@ -171,11 +203,10 @@ function EmailDashboard() {
             <div className="no-emails">No emails found matching your criteria.</div>
           )}
 
-          {!loading && filteredEmails.length > 0 && (
+          {!loading && emails.length > 0 && (
             <div className="footer">
               <div className="footer-info">
-                <span>Showing {filteredEmails.length} of {emails.length} emails</span>
-                <button onClick={fetchEmails} className="footer-refresh">🔄 Refresh</button>
+                <span>Showing {emails.length} emails</span>
               </div>
             </div>
           )}
@@ -185,5 +216,4 @@ function EmailDashboard() {
   );
 }
 
-
-export default EmailDashboard; 
+export default EmailDashboard;

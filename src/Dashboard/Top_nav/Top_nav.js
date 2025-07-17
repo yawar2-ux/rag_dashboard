@@ -1,9 +1,9 @@
 import React from "react";
+import UseLogout from "../Logout/logout";
 
-function topNav() {
-  const goToDashboard = () => {
-    window.location.href = "/";
-  };
+
+function TopNav() {
+  const { handleLogout} = UseLogout();
 
   return (
     <div>
@@ -12,7 +12,7 @@ function topNav() {
           <li>
             <i className="fas fa-bell" title="Notifications"></i>
           </li>
-          <li onClick={goToDashboard} style={{ cursor: "pointer" }}>
+          <li onClick={handleLogout} style={{ cursor: "pointer" }}>
             <i className="fas fa-right-from-bracket" title="Sign Out"></i>
           </li>
         </ul>
@@ -22,4 +22,4 @@ function topNav() {
 
 }
 
-export default topNav;
+export default TopNav;

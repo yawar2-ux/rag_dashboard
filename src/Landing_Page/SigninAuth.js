@@ -1,14 +1,14 @@
 import { useState } from 'react';
-
-// Custom hook for authentication
 const useSigninAuth = () => {
+  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+ const baseURL = process.env.REACT_APP_BASE_URL;
 
-  const authenticateUser = async (username, password) => {
+  const authenticateUser = async (username, password) => { // why not use await here
     try {
-      const response = await fetch('http://127.0.0.1:8000/rag_doc/login', {
+      const response = await fetch(`${baseURL}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -18,18 +18,18 @@ const useSigninAuth = () => {
           password: password
         })
       });
-
       const data = await response.json();
 
       if (response.ok) {
         return {
           success: true,
-          data: data
+          message:data
         };
       } else {
         return {
           success: false,
-          message: data.message || data.detail || 'Invalid credentials'
+          message: 'Invalid username or password. Please try again.'
+          
         };
       }
     } catch (error) {
@@ -58,11 +58,8 @@ const useSigninAuth = () => {
       if (result.success) {
         setSuccess('Login successful! Redirecting to dashboard...');
         
-        // Store user data
-        localStorage.setItem('user', JSON.stringify(result.data));
+        localStorage.setItem('user', JSON.stringify(result.message));
         localStorage.setItem('isAuthenticated', 'true');
-        
-        // Redirect to dashboard
         setTimeout(() => {
           window.location.href = '/dashboard';
         }, 1500);

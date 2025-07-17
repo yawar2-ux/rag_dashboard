@@ -3,8 +3,8 @@ import React from "react";
 function SignupImage() {
     return (
         <div>
-             <img  className="logo-img" src="/TantorImage/tantorLogo.png" alt="Tanto Image" />
-             <img className="corner-img" src="/TantorImage/tantorai.png" alt="Corner Image" />
+             <img  className="logo-img" src="/TantorImage/tantor ai.png" alt="Tanto Image" />
+          
         </div>
 
     );
